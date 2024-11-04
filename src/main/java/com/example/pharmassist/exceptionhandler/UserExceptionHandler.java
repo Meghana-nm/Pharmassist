@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.example.pharmassist.exception.AdminNotFoundByIdException;
 import com.example.pharmassist.exception.NoAdminsFoundException;
+import com.example.pharmassist.exception.PharmacyNotFoundByAdminIdException;
 import com.example.pharmassist.util.AppResponseBuilder;
 import com.example.pharmassist.util.ErrorStructure;
 
@@ -22,14 +23,18 @@ public class UserExceptionHandler
 	}
 
 	@ExceptionHandler(AdminNotFoundByIdException.class)
-	public static <T> ResponseEntity<ErrorStructure<String>> handleUserNotFoundById(AdminNotFoundByIdException ex) {
-		return AppResponseBuilder.error(HttpStatus.NOT_FOUND, ex.getMessage(),"User not found by Id");
+	public static <T> ResponseEntity<ErrorStructure<String>> handleAdminNotFoundById(AdminNotFoundByIdException ex) {
+		return AppResponseBuilder.error(HttpStatus.NOT_FOUND, ex.getMessage(),"Admin not found by Id");
 
 	}
 
 	@ExceptionHandler(NoAdminsFoundException.class)
 	public static ResponseEntity<ErrorStructure<String>> handleNoUsersFound(NoAdminsFoundException ex){
-		return AppResponseBuilder.error(HttpStatus.NOT_FOUND, ex.getMessage(),"User not found under requested criteria");
+		return AppResponseBuilder.error(HttpStatus.NOT_FOUND, ex.getMessage(),"Admin not found under requested criteria");
 	}
-
+	
+	@ExceptionHandler(PharmacyNotFoundByAdminIdException.class)
+	public static ResponseEntity<ErrorStructure<String>> handlePharmacyNotFoundByAdminId(PharmacyNotFoundByAdminIdException ex) {
+	    return AppResponseBuilder.error(HttpStatus.NOT_FOUND, ex.getMessage(),"Pharmacy not found by adminId");
+	}
 }

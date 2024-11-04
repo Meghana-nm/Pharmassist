@@ -1,17 +1,16 @@
 package com.example.pharmassist.service;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.pharmassist.entity.Admin;
 import com.example.pharmassist.entity.Pharmacy;
 import com.example.pharmassist.exception.AdminNotFoundByIdException;
+import com.example.pharmassist.exception.PharmacyNotFoundByAdminIdException;
 import com.example.pharmassist.mapper.PharmacyMapper;
 import com.example.pharmassist.repository.AdminRepository;
 import com.example.pharmassist.repository.PharmacyRepository;
 import com.example.pharmassist.requestdtos.PharmacyRequest;
 import com.example.pharmassist.responsedtos.PharmacyResponse;
-import com.example.pharmassist.util.ResponseStructure;
 
 @Service
 public class PharmacyService {
@@ -42,7 +41,19 @@ public class PharmacyService {
 		 .orElseThrow(() -> new AdminNotFoundByIdException("admin with requested id is not found"));
 		 	
 	}
+	
+	public PharmacyResponse findPharmacyByAdminId(String adminId)
+	{
+		Admin admin=adminRepository.findById(adminId)
+				.orElseThrow(() -> new AdminNotFoundByIdException("Failed to Find Admin"));
 
+		Pharmacy pharmacy=adminRepository.findPharmacyByAdminId(adminId);
+		if(pharmacy==null)
+		{
+			throw new PharmacyNotFoundByAdminIdException("No Pharmacy associated with admin ID:"+adminId);
+		}
+		return pharmacyMapper.mapToPharmacyResponse(pharmacy);
+	}
 }
 
 
