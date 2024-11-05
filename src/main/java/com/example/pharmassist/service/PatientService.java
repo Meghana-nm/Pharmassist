@@ -1,7 +1,6 @@
 package com.example.pharmassist.service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -55,6 +54,16 @@ public class PatientService {
 		return patients.stream()
 				.map(patientMapper::mapToPatientResponse)
 				.collect(Collectors.toList());
+	}
+	
+	public PatientResponse updatePatient(PatientRequest patientRequest, String patientId) {
+	    return patientRepository.findById(patientId)
+	        .map(exPatient -> {
+	            patientMapper.mapToPatient(patientRequest, exPatient);
+	            return patientRepository.save(exPatient);
+	        })
+	        .map(patientMapper::mapToPatientResponse)
+	        .orElseThrow(() -> new PatientNotFoundException("Failed to find Patient by Id"));
 	}
 }
 
