@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.example.pharmassist.exception.AdminNotFoundByIdException;
 import com.example.pharmassist.exception.NoAdminsFoundException;
+import com.example.pharmassist.exception.PatientNotFoundException;
 import com.example.pharmassist.exception.PharmacyNotFoundByAdminIdException;
 import com.example.pharmassist.exception.PharmacyNotFoundException;
 import com.example.pharmassist.util.AppResponseBuilder;
@@ -42,5 +43,10 @@ public class UserExceptionHandler
 	@ExceptionHandler(PharmacyNotFoundException.class)
 	public static ResponseEntity<ErrorStructure<String>> handlePharmacyNotFound(PharmacyNotFoundByAdminIdException ex) {
 	    return AppResponseBuilder.error(HttpStatus.NOT_FOUND, ex.getMessage(),"Pharmacy not found");
+	}
+	
+	@ExceptionHandler(PatientNotFoundException.class)
+	public static <T> ResponseEntity<ErrorStructure<String>> handlePatientNotFound(PatientNotFoundException ex) {
+		return AppResponseBuilder.error(HttpStatus.NOT_FOUND, ex.getMessage(),"Pharmacy not found by Id");
 	}
 }
