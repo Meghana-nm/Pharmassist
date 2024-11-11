@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.poi.openxml4j.exceptions.NotOfficeXmlFileException;
 import org.apache.poi.ss.usermodel.Row;
@@ -19,9 +21,12 @@ import com.example.pharmassist.enums.Form;
 import com.example.pharmassist.exception.InvalidDataException;
 import com.example.pharmassist.exception.InvalidDateFormatException;
 import com.example.pharmassist.exception.InvalidFileFormatException;
+import com.example.pharmassist.exception.NoMedicinesFoundException;
 import com.example.pharmassist.exception.PharmacyNotFoundException;
+import com.example.pharmassist.mapper.MedicineMapper;
 import com.example.pharmassist.repository.MedicineRepository;
 import com.example.pharmassist.repository.PharmacyRepository;
+import com.example.pharmassist.responsedtos.MedicineResponse;
 
 import jakarta.validation.Valid;
 
@@ -30,11 +35,14 @@ public class MedicineService {
 	
 	private MedicineRepository medicineRepository;
 	private final PharmacyRepository pharmacyRepository;
+	private final MedicineMapper medicineMapper;
 
-	public MedicineService(MedicineRepository medicineRepository, PharmacyRepository pharmacyRepository) {
+	public MedicineService(MedicineRepository medicineRepository, PharmacyRepository pharmacyRepository, MedicineMapper medicineMapper) {
 		super();
 		this.medicineRepository = medicineRepository;
 		this.pharmacyRepository = pharmacyRepository;
+		this.medicineMapper = medicineMapper;
+		
 	}
 
 	public String uploadMedicines(MultipartFile file,String pharmacyId) 
@@ -107,6 +115,20 @@ public class MedicineService {
 
 		medicineRepository.save(medicine);
 
+	}
+	
+	public List<MedicineResponse> findMedicine(String text)
+	{
+		text="%"+text+"%";
+		List<Medicine> medicines=medicineRepository.findByNameLikeIgnoreCaseOrIngredientsLikeIgnoreCase(text,text);
+
+		if(medicines.isEmpty())
+		{
+			throw new NoMedicinesFoundException("Failed to find medicines based on name or ingredients");
+		}
+		return medicines.stream()
+				.map(medicineMapper::mapToMedicineResponse)
+				.collect(Collectors.toList());
 	}
 	
 

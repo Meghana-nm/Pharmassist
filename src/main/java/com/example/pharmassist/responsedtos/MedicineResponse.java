@@ -9,7 +9,7 @@ public class MedicineResponse {
 	private String medicineId;
 	private String name;
 	private String category;
-	private String[] ingredients;
+	private String ingredients;
 	private int dosageInMg;
 	private Form form;
 	private String manufacturer;
@@ -34,11 +34,11 @@ public class MedicineResponse {
 	public void setCategory(String category) {
 		this.category = category;
 	}
-	public String[] getIngredients() {
+	public String getIngredients() {
 		return ingredients;
 	}
-	public void setIngredients(String[] ingredients) {
-		this.ingredients = ingredients;
+	public void setIngredients(String string) {
+		this.ingredients = string;
 	}
 	public int getDosageInMg() {
 		return dosageInMg;
