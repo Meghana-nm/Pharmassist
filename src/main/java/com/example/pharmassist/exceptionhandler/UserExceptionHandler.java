@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.example.pharmassist.exception.AdminNotFoundByIdException;
+import com.example.pharmassist.exception.InvalidDataException;
+import com.example.pharmassist.exception.InvalidDateFormatException;
+import com.example.pharmassist.exception.InvalidFileFormatException;
 import com.example.pharmassist.exception.NoAdminsFoundException;
 import com.example.pharmassist.exception.PatientNotFoundException;
 import com.example.pharmassist.exception.PharmacyNotFoundByAdminIdException;
@@ -27,7 +30,6 @@ public class UserExceptionHandler
 	@ExceptionHandler(AdminNotFoundByIdException.class)
 	public static <T> ResponseEntity<ErrorStructure<String>> handleAdminNotFoundById(AdminNotFoundByIdException ex) {
 		return AppResponseBuilder.error(HttpStatus.NOT_FOUND, ex.getMessage(),"Admin not found by Id");
-
 	}
 
 	@ExceptionHandler(NoAdminsFoundException.class)
@@ -48,5 +50,20 @@ public class UserExceptionHandler
 	@ExceptionHandler(PatientNotFoundException.class)
 	public static <T> ResponseEntity<ErrorStructure<String>> handlePatientNotFound(PatientNotFoundException ex) {
 		return AppResponseBuilder.error(HttpStatus.NOT_FOUND, ex.getMessage(),"Pharmacy not found by Id");
+	}
+	
+	@ExceptionHandler(InvalidDataException.class)
+	public static <T> ResponseEntity<ErrorStructure<String>> handleInvalidData(InvalidDataException ex) {
+		return AppResponseBuilder.error(HttpStatus.NOT_FOUND, ex.getMessage(),"Data Is Invalid");
+	}
+
+	@ExceptionHandler(InvalidDateFormatException.class)
+	public static <T> ResponseEntity<ErrorStructure<String>> handleInvalidDateFormat(InvalidDateFormatException ex) {
+		return AppResponseBuilder.error(HttpStatus.NOT_FOUND, ex.getMessage(),"Date Format is Invalid");
+	}
+
+	@ExceptionHandler(InvalidFileFormatException.class)
+	public static <T> ResponseEntity<ErrorStructure<String>> handleInvalidFileFormat(InvalidFileFormatException ex) {
+		return AppResponseBuilder.error(HttpStatus.NOT_FOUND, ex.getMessage(),"File Format is Inavlid");
 	}
 }
